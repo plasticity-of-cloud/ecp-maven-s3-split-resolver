@@ -34,15 +34,19 @@ Use of the software as part of a Software-as-a-Service (SaaS) offering or any ex
 
 Contact: **ecosystem@plasticity.cloud**
 
-## 5. Disclaimer of Warranty
+## 5. GitHub Star Requirement
+
+As a condition of this commercial license, Licensee agrees to star the project's GitHub repository at the time of signing. This is a mandatory requirement for all commercial license agreements.
+
+## 6. Disclaimer of Warranty
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NONINFRINGEMENT.
 
-## 6. Limitation of Liability
+## 7. Limitation of Liability
 
 IN NO EVENT SHALL LICENSOR BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES ARISING OUT OF OR RELATED TO THIS AGREEMENT OR THE USE OF THE SOFTWARE.
 
-## 7. Termination
+## 8. Termination
 
 This license is effective until terminated. Licensor may terminate this Agreement if Licensee breaches any of its terms. Upon termination, Licensee must cease all use and destroy all copies of the software.
 
