@@ -44,16 +44,14 @@ public class S3SplitLocalRepositoryManager implements LocalRepositoryManager {
 
     @Override
     public String getPathForLocalArtifact(Artifact artifact) {
-        // Locally installed artifacts go to S3
         String relativePath = delegate.getPathForLocalArtifact(artifact);
-        return artifactDir.resolve(relativePath).toString();
+        return metadataDir.relativize(artifactDir.resolve(relativePath)).toString();
     }
 
     @Override
     public String getPathForRemoteArtifact(Artifact artifact, RemoteRepository repository, String context) {
-        // Cached remote artifacts go to S3
         String relativePath = delegate.getPathForRemoteArtifact(artifact, repository, context);
-        return artifactDir.resolve(relativePath).toString();
+        return metadataDir.relativize(artifactDir.resolve(relativePath)).toString();
     }
 
     @Override
