@@ -1,0 +1,73 @@
+Maven S3 Split Resolver - Write Flow Diagram
+=============================================
+
+When Maven downloads org.apache.commons:commons-lang3:3.12.0 from Maven Central:
+
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│                         Maven Build Process                              │
+└─────────────────────────────────────────────────────────────────────────┘
+                                    │
+                                    ▼
+┌─────────────────────────────────────────────────────────────────────────┐
+│              S3SplitLocalRepositoryManager (Custom)                      │
+│                                                                          │
+│  Intercepts path resolution requests:                                   │
+│  • getPathForRemoteArtifact(commons-lang3-3.12.0.jar)                  │
+│  • getPathForRemoteArtifact(commons-lang3-3.12.0.pom)                  │
+│  • getPathForLocalMetadata(...)                                         │
+└─────────────────────────────────────────────────────────────────────────┘
+                    │                                    │
+                    │                                    │
+        ┌───────────▼──────────┐              ┌─────────▼──────────┐
+        │  Artifact Request    │              │  Metadata Request  │
+        │  (JAR, POM, SHA)     │              │  (tracking files)  │
+        └───────────┬──────────┘              └─────────┬──────────┘
+                    │                                    │
+                    │                                    │
+                    ▼                                    ▼
+        ┌───────────────────────┐            ┌──────────────────────┐
+        │ Return path under:    │            │ Delegate to Enhanced │
+        │ s3.resolver.artifactDir│            │ LRM (uses base dir)  │
+        └───────────┬───────────┘            └──────────┬───────────┘
+                    │                                    │
+                    │                                    │
+                    ▼                                    ▼
+
+┌────────────────────────────────┐    ┌──────────────────────────────────┐
+│  /home/maven/.m2/repository    │    │  /maven/.m2/repository-metadata  │
+│  (S3 Mount - Mountpoint)       │    │  (EmptyDir - Local Disk)         │
+│                                │    │                                  │
+│  Sequential writes only        │    │  Full POSIX I/O (random writes)  │
+│  ✓ Create new files            │    │  ✓ Create, update, append        │
+│  ✓ Overwrite entire files      │    │  ✓ Seek and partial writes       │
+│  ✗ Random I/O, appends         │    │  ✓ All metadata operations       │
+└────────────────┬───────────────┘    └──────────────┬───────────────────┘
+                 │                                    │
+                 ▼                                    ▼
+
+org/apache/commons/                    org/apache/commons/
+  commons-lang3/3.12.0/                  commons-lang3/3.12.0/
+    ├── commons-lang3-3.12.0.jar         ├── _remote.repositories
+    ├── commons-lang3-3.12.0.pom         ├── resolver-status.properties
+    ├── commons-lang3-3.12.0.jar.sha1    └── commons-lang3-3.12.0.jar.lastUpdated
+    └── commons-lang3-3.12.0.pom.sha1
+
+
+Result:
+-------
+✓ Immutable artifacts (JARs, POMs) → S3 (persistent, shared across pods)
+✓ Mutable metadata (tracking files) → EmptyDir (ephemeral, per-pod)
+✓ No random I/O on S3 mount
+✓ Maven resolver works correctly with full metadata support
+
+
+Configuration:
+--------------
+MAVEN_OPTS:
+  -Dmaven.repo.local=/maven/.m2/repository-metadata
+  -Ds3.resolver.artifactDir=/home/maven/.m2/repository
+
+Volume Mounts:
+  /home/maven/.m2/repository      → PVC (S3 via Mountpoint)
+  /maven/.m2/repository-metadata  → EmptyDir
