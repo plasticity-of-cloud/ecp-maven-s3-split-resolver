@@ -38,15 +38,19 @@ Contact: **ecosystem@plasticity.cloud**
 
 As a condition of this commercial license, Licensee agrees to star the project's GitHub repository at the time of signing. This is a mandatory requirement for all commercial license agreements.
 
-## 6. Disclaimer of Warranty
+## 6. Right to Refuse License
+
+Licensor reserves the right to refuse, revoke, or decline to renew a commercial license to any entity whose use of the software, in Licensor's sole judgment, competes with, undermines, or otherwise negatively impacts Licensor's core business, products, services, or customers.
+
+## 7. Disclaimer of Warranty
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NONINFRINGEMENT.
 
-## 7. Limitation of Liability
+## 8. Limitation of Liability
 
 IN NO EVENT SHALL LICENSOR BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES ARISING OUT OF OR RELATED TO THIS AGREEMENT OR THE USE OF THE SOFTWARE.
 
-## 8. Termination
+## 9. Termination
 
 This license is effective until terminated. Licensor may terminate this Agreement if Licensee breaches any of its terms. Upon termination, Licensee must cease all use and destroy all copies of the software.
 
