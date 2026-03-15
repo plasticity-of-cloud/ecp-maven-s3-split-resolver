@@ -94,8 +94,10 @@ public class S3SplitLocalRepositoryManager implements LocalRepositoryManager {
             try {
                 Files.createDirectories(dest.getParent());
                 Files.copy(source, dest);
+                Files.delete(source);
             } catch (FileAlreadyExistsException e) {
                 // Already on S3 from a previous build
+                try { Files.delete(source); } catch (IOException ignored) {}
             } catch (IOException e) {
                 System.err.println("[S3SplitResolver] Failed to copy to S3: " + e.getMessage());
             }
