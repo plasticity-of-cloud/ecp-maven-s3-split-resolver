@@ -20,9 +20,15 @@ This extension splits the local repository into two locations:
 mvn clean install
 ```
 
-### 2. Configure in your project
+### 2. Install the extension
 
-Create `.mvn/extensions.xml`:
+Copy the built JAR into Maven's extension directory:
+
+```bash
+cp target/maven-s3-split-resolver-1.0.0-SNAPSHOT.jar $MAVEN_HOME/lib/ext/
+```
+
+Alternatively, reference it via `.mvn/extensions.xml` in your project:
 
 ```xml
 <extensions>
