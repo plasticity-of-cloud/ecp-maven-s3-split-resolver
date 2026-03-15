@@ -90,12 +90,18 @@ public class S3SplitLocalRepositoryManager implements LocalRepositoryManager {
         String relativePath = delegate.getPathForLocalArtifact(request.getArtifact());
         Path source = metadataDir.resolve(relativePath);
         Path dest = artifactDir.resolve(relativePath);
-        if (Files.exists(source)) {
+        if (Files.exists(source) && !Files.isSymbolicLink(source)) {
             try {
                 Files.createDirectories(dest.getParent());
                 Files.copy(source, dest);
+                Files.delete(source);
+                Files.createSymbolicLink(source, dest);
             } catch (FileAlreadyExistsException e) {
-                // Already on S3 from a previous build
+                // Already on S3 — just replace with symlink
+                try {
+                    Files.delete(source);
+                    Files.createSymbolicLink(source, dest);
+                } catch (IOException ignored) {}
             } catch (IOException e) {
                 System.err.println("[S3SplitResolver] Failed to copy to S3: " + e.getMessage());
             }
