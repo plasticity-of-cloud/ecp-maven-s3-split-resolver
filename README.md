@@ -69,3 +69,12 @@ env:
 ├── org/apache/commons/.../_remote.repositories  ← Metadata here
 └── org/apache/commons/.../.lastUpdated
 ```
+
+## License
+
+This project is dual-licensed:
+
+- **AGPL-3.0** — Free for open-source use under the terms of the [GNU Affero General Public License v3.0](https://www.gnu.org/licenses/agpl-3.0.html).
+- **Commercial License** — For proprietary/internal use without AGPL obligations. See [COMMERCIAL-LICENSE.md](COMMERCIAL-LICENSE.md) for terms and pricing.
+
+For SaaS usage or custom commercial agreements, contact **ecosystem@plasticity.cloud**.
