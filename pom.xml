@@ -65,6 +65,9 @@
                     <to>
                         <image>maven-s3-split-resolver</image>
                     </to>
+                    <container>
+                        <entrypoint>INHERIT</entrypoint>
+                    </container>
                     <extraDirectories>
                         <paths>
                             <path>
