@@ -14,13 +14,32 @@ This extension splits the local repository into two locations:
 
 ## Usage
 
-### 1. Build and install
+### Kubernetes Deployment (Recommended)
+
+Deploy using Helm chart with S3-backed artifact caching:
+
+```bash
+# Install with default values
+helm install maven-s3 ./s3-integration/helm-chart -n elastic-cicd --create-namespace
+
+# Or customize configuration
+helm install maven-s3 ./s3-integration/helm-chart -n elastic-cicd \
+  --set s3.bucketName=your-bucket-name \
+  --set s3.region=your-region \
+  --set image.repository=your-registry/maven
+```
+
+See [s3-integration/helm-chart/README.md](s3-integration/helm-chart/README.md) for full configuration options.
+
+### Local Development
+
+#### 1. Build and install
 
 ```bash
 mvn clean install
 ```
 
-### 2. Install the extension
+#### 2. Install the extension
 
 Copy the built JAR into Maven's extension directory:
 
@@ -40,21 +59,13 @@ Alternatively, reference it via `.mvn/extensions.xml` in your project:
 </extensions>
 ```
 
-### 3. Configure paths
+#### 3. Configure paths
 
 Set system properties in `MAVEN_OPTS`:
 
 ```bash
 export MAVEN_OPTS="-Dmaven.repo.local=/home/maven/.m2/repository-metadata \
                    -Ds3.resolver.artifactDir=/home/maven/.m2/repository"
-```
-
-Or in pod YAML:
-
-```yaml
-env:
-- name: MAVEN_OPTS
-  value: "-Dmaven.repo.local=/home/maven/.m2/repository-metadata -Ds3.resolver.artifactDir=/home/maven/.m2/repository"
 ```
 
 ## How it works

@@ -1,0 +1,38 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: {{ .Values.s3.pv.name }}
+spec:
+  capacity:
+    storage: {{ .Values.s3.pv.capacity }}
+  accessModes:
+    - ReadWriteMany
+  storageClassName: ""
+  mountOptions:
+    {{- range .Values.s3.mountOptions }}
+    - {{ . | quote }}
+    {{- end }}
+    - "region {{ .Values.s3.region }}"
+  csi:
+    driver: s3.csi.aws.com
+    volumeHandle: {{ .Values.s3.pv.name }}
+    volumeAttributes:
+      bucketName: {{ .Values.s3.bucketName }}
+      cache: {{ .Values.s3.cache.type }}
+      {{- if .Values.s3.cache.sizeLimit }}
+      cacheEmptyDirSizeLimit: {{ .Values.s3.cache.sizeLimit }}
+      {{- end }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ .Values.s3.pvc.name }}
+  namespace: {{ .Values.namespace }}
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: ""
+  volumeName: {{ .Values.s3.pv.name }}
+  resources:
+    requests:
+      storage: {{ .Values.s3.pv.capacity }}

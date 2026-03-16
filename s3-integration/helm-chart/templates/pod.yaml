@@ -1,0 +1,65 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: {{ .Values.pod.name }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: {{ .Values.pod.name }}
+    component: ci-cd
+spec:
+  restartPolicy: {{ .Values.pod.restartPolicy }}
+  nodeSelector:
+    {{- toYaml .Values.nodeSelector | nindent 4 }}
+  tolerations:
+    {{- toYaml .Values.tolerations | nindent 2 }}
+  securityContext:
+    {{- toYaml .Values.securityContext | nindent 4 }}
+  containers:
+  - name: maven-builder
+    image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+    imagePullPolicy: {{ .Values.image.pullPolicy }}
+    command: ["/bin/bash", "-c"]
+    args:
+    - |
+      echo "Maven S3 integration pod started"
+      java -version
+      echo "Sleeping indefinitely..."
+      sleep infinity
+    env:
+    - name: HOME
+      value: /home/maven
+    - name: USER
+      value: maven
+    - name: MAVEN_CONFIG
+      value: /home/maven/.m2
+    - name: MAVEN_OPTS
+      value: {{ .Values.maven.opts | quote }}
+    resources:
+      {{- toYaml .Values.resources | nindent 6 }}
+    volumeMounts:
+    - name: maven-home
+      mountPath: /home/maven
+    - name: workspace
+      mountPath: /workspace
+    - name: maven-cache-s3
+      mountPath: /home/maven/.m2/repository
+    - name: maven-metadata
+      mountPath: /home/maven/.m2-metadata/repository-metadata
+    workingDir: /workspace
+  volumes:
+  - name: workspace
+    ephemeral:
+      volumeClaimTemplate:
+        spec:
+          accessModes: ["ReadWriteOnce"]
+          storageClassName: {{ .Values.volumes.workspace.storageClassName }}
+          resources:
+            requests:
+              storage: {{ .Values.volumes.workspace.size }}
+  - name: maven-cache-s3
+    persistentVolumeClaim:
+      claimName: {{ .Values.s3.pvc.name }}
+  - name: maven-metadata
+    emptyDir: {{- toYaml .Values.volumes.metadataEmptyDir | nindent 6 }}
+  - name: maven-home
+    emptyDir: {{- toYaml .Values.volumes.homeEmptyDir | nindent 6 }}

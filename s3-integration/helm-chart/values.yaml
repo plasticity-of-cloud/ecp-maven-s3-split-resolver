@@ -1,0 +1,64 @@
+namespace: elastic-cicd
+
+pod:
+  name: ecp-maven-s3
+  restartPolicy: Never
+  
+image:
+  repository: 864899852480.dkr.ecr.ap-south-1.amazonaws.com/docker/library/maven
+  tag: 3.9-amazoncorretto-21-al2023-s3
+  pullPolicy: Always
+
+nodeSelector:
+  node-type: karpenter-worker
+
+tolerations:
+  - key: "spot"
+    operator: "Equal"
+    value: "true"
+    effect: "NoSchedule"
+
+securityContext:
+  runAsUser: 1000
+  runAsGroup: 1000
+  fsGroup: 1000
+  runAsNonRoot: true
+
+resources:
+  requests:
+    cpu: "2"
+    memory: "2Gi"
+  limits:
+    cpu: "3"
+    memory: "4Gi"
+
+maven:
+  opts: "-Xmx1536m -Xms512m -Dmaven.repo.local=/home/maven/.m2-metadata/repository-metadata -Ds3.resolver.artifactDir=/home/maven/.m2/repository"
+
+volumes:
+  workspace:
+    storageClassName: ebs-sc
+    size: 10Gi
+  metadataEmptyDir: {}
+  homeEmptyDir: {}
+
+s3:
+  bucketName: 864899852480-ecp-lab-elastic-cicd-maven-m2
+  region: ap-south-1
+  pv:
+    name: ecp-maven-s3-pv
+    capacity: 100Gi
+  pvc:
+    name: ecp-maven-s3-pvc
+  mountOptions:
+    - allow-delete
+    - allow-overwrite
+    - allow-other
+    - "metadata-ttl 300"
+    - "read-part-size 5242880"
+    - "max-threads 16"
+    - uid=1000
+    - gid=1000
+  cache:
+    type: emptyDir
+    sizeLimit: 8Gi

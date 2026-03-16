@@ -1,0 +1,6 @@
+apiVersion: v2
+name: maven-s3-integration
+description: Maven build pod with S3-backed artifact cache
+type: application
+version: 1.0.0
+appVersion: "1.0.0"
