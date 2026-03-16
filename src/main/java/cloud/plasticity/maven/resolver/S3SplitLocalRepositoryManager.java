@@ -12,6 +12,8 @@ import org.eclipse.aether.repository.LocalMetadataResult;
 import org.eclipse.aether.repository.LocalRepository;
 import org.eclipse.aether.repository.LocalRepositoryManager;
 import org.eclipse.aether.repository.RemoteRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
@@ -30,6 +32,8 @@ import java.nio.file.Path;
  * 3. find() checks S3 for cached artifacts from previous builds
  */
 public class S3SplitLocalRepositoryManager implements LocalRepositoryManager {
+
+    private static final Logger LOG = LoggerFactory.getLogger(S3SplitLocalRepositoryManager.class);
 
     private final LocalRepositoryManager delegate;
     private final Path artifactDir;
@@ -103,7 +107,7 @@ public class S3SplitLocalRepositoryManager implements LocalRepositoryManager {
                     Files.createSymbolicLink(source, dest);
                 } catch (IOException ignored) {}
             } catch (IOException e) {
-                System.err.println("[S3SplitResolver] Failed to copy to S3: " + e.getMessage());
+                LOG.warn("[S3SplitResolver] Failed to copy to S3: {}", e.getMessage());
             }
         }
     }

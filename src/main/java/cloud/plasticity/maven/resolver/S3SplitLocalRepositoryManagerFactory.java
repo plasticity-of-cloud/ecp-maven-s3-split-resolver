@@ -6,6 +6,9 @@ import org.eclipse.aether.repository.LocalRepositoryManager;
 import org.eclipse.aether.repository.NoLocalRepositoryManagerException;
 import org.eclipse.aether.spi.localrepo.LocalRepositoryManagerFactory;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -23,6 +26,7 @@ import java.nio.file.Paths;
 @Singleton
 public class S3SplitLocalRepositoryManagerFactory implements LocalRepositoryManagerFactory {
 
+    private static final Logger LOG = LoggerFactory.getLogger(S3SplitLocalRepositoryManagerFactory.class);
     private static final String ARTIFACT_DIR_PROPERTY = "s3.resolver.artifactDir";
     private static final float PRIORITY = 100.0f; // Higher priority than default
 
@@ -47,8 +51,8 @@ public class S3SplitLocalRepositoryManagerFactory implements LocalRepositoryMana
         Path artifactDir = Paths.get(artifactDirProperty);
         Path metadataDir = repository.getBasedir().toPath();
 
-        System.out.println("[S3SplitResolver] Artifacts: " + artifactDir);
-        System.out.println("[S3SplitResolver] Metadata: " + metadataDir);
+        LOG.info("[S3SplitResolver] Artifacts: {}", artifactDir);
+        LOG.info("[S3SplitResolver] Metadata: {}", metadataDir);
 
         LocalRepositoryManager delegateManager = delegate.newInstance(session, repository);
         return new S3SplitLocalRepositoryManager(delegateManager, artifactDir, metadataDir);
