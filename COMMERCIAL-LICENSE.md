@@ -25,7 +25,7 @@ Licensee shall **NOT**:
 | Tier | Annual License | Description |
 |------|---------------|-------------|
 | Startup/SMB (< 50 employees) | **€500/year** | Perfect for small teams and growing companies |
-| Medium (50-500 employees) | **€1,000/year** | Scales with your organization |
+| Medium (50-500 employees) | **€2,000/year** | Scales with your organization |
 | Enterprise (500+ employees) | **€10,000/year** | Includes priority support |
 | SaaS / Commercial Use | **Private offer** | Custom pricing for service providers |
 
