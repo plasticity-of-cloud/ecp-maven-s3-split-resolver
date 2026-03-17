@@ -7,12 +7,27 @@
 
 ## Installation
 
+### Quick Install (All-in-One)
+
+```bash
+# Install Mountpoint, Corretto (default: 21), and Maven
+./install-all.sh
+
+# Or specify Corretto version
+./install-all.sh 17
+```
+
+### Manual Install
+
 ```bash
 # Install Mountpoint for S3 (included in AL2023)
 ./install-mountpoint.sh
 
-# Mount your S3 bucket
-sudo mount-s3 <your-bucket-name> /mnt/s3 --allow-delete --allow-overwrite
+# Install Amazon Corretto
+sudo dnf install -y java-21-amazon-corretto
+
+# Install Maven
+sudo dnf install -y maven
 ```
 
 ## Usage
