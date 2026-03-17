@@ -16,9 +16,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.nio.channels.FileChannel;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 
 /**
  * Custom LocalRepositoryManager that splits artifact storage (S3) from metadata storage (local).
@@ -90,14 +92,14 @@ public class S3SplitLocalRepositoryManager implements LocalRepositoryManager {
     @Override
     public void add(RepositorySystemSession session, LocalArtifactRegistration request) {
         delegate.add(session, request);
-        // Copy final artifact from EmptyDir to S3
+        // Copy final artifact from EmptyDir to S3 using zero-copy
         String relativePath = delegate.getPathForLocalArtifact(request.getArtifact());
         Path source = metadataDir.resolve(relativePath);
         Path dest = artifactDir.resolve(relativePath);
         if (Files.exists(source) && !Files.isSymbolicLink(source)) {
             try {
                 Files.createDirectories(dest.getParent());
-                Files.copy(source, dest);
+                zeroCopyFile(source, dest);
                 Files.delete(source);
                 Files.createSymbolicLink(source, dest);
             } catch (FileAlreadyExistsException e) {
@@ -108,6 +110,19 @@ public class S3SplitLocalRepositoryManager implements LocalRepositoryManager {
                 } catch (IOException ignored) {}
             } catch (IOException e) {
                 LOG.warn("[S3SplitResolver] Failed to copy to S3: {}", e.getMessage());
+            }
+        }
+    }
+
+    private void zeroCopyFile(Path source, Path dest) throws IOException {
+        try (FileChannel srcChannel = FileChannel.open(source, StandardOpenOption.READ);
+             FileChannel dstChannel = FileChannel.open(dest, StandardOpenOption.WRITE, 
+                                                       StandardOpenOption.CREATE, 
+                                                       StandardOpenOption.TRUNCATE_EXISTING)) {
+            long size = srcChannel.size();
+            long transferred = 0;
+            while (transferred < size) {
+                transferred += srcChannel.transferTo(transferred, size - transferred, dstChannel);
             }
         }
     }
