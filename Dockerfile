@@ -13,3 +13,6 @@ COPY target/maven-s3-split-resolver-*.jar /usr/share/maven/lib/ext/
 # Switch to maven user
 USER maven
 
+# Update MAVEN_CONFIG to use maven user's home
+ENV MAVEN_CONFIG=/home/maven/.m2
+
