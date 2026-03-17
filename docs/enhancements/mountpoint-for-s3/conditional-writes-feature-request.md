@@ -4,8 +4,7 @@
 
 ---
 
-**Copyright © 2026 Plasticity.Cloud**  
-This document may be freely shared and referenced with attribution.
+**Copyright © 2026 Plasticity.Cloud. All rights reserved.**
 
 ---
 
