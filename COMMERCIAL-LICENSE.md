@@ -22,11 +22,42 @@ Licensee shall **NOT**:
 
 ## 3. Pricing
 
-| Tier | Annual Fee |
-|------|-----------|
-| Small to Medium Companies | €10 / year |
-| Large Companies (internal use) | €100 / year |
-| SaaS / Commercial Use | Requires a separate commercial agreement — contact Licensor |
+### Early Adopter Program (Limited Time)
+
+**Available for first 20 customers or until May 1st, 2026 — whichever comes first**
+
+| Tier | Regular Price | Early Adopter Price | Lock Period |
+|------|--------------|---------------------|-------------|
+| Startup/SMB (< 50 employees) | €500/year | **€100/year** | 3 years |
+| Medium (50-500 employees) | €2,500/year | **€500/year** | 3 years |
+| Enterprise (500+ employees) | €10,000/year | **€2,000/year** | 3 years |
+| SaaS / Commercial Use | Custom (€25,000+ base) | Contact us | Custom |
+
+**Early Adopter Benefits:**
+- **50-80% discount** on regular pricing
+- **Price locked for 3 years** — guaranteed no price increases
+- **Listed as founding customer** (with your permission)
+- **Priority support channel** — faster response times
+- **Influence product roadmap** — your feedback shapes future development
+
+After the Early Adopter Program ends, standard pricing applies to all new customers. Existing Early Adopter customers retain their discounted pricing for the full 3-year lock period.
+
+### Support Packages (Optional Add-ons)
+
+| Package | Price | Benefits |
+|---------|-------|----------|
+| Community | Free | GitHub issues, best-effort support |
+| Professional | +€1,000/year | 48-hour response time, email support |
+| Enterprise | +€5,000/year | 4-hour response time, dedicated Slack channel, quarterly architecture reviews |
+
+### Consulting Services
+
+| Service | Price | Description |
+|---------|-------|-------------|
+| Implementation | €2,500 | 1-day setup, optimization, and best practices |
+| Architecture Review | €5,000 | 2-day EKS + S3 architecture design and optimization |
+| Custom Development | €150/hour | Feature development, custom integrations |
+| Team Training | €1,500/day | On-site or remote training on S3 optimization strategies |
 
 ## 4. SaaS and Commercial Use
 
