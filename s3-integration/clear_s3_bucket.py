@@ -3,21 +3,19 @@
 import yaml
 import boto3
 import sys
+from pathlib import Path
 
 def clear_s3_bucket():
-    # Read YAML file
-    with open('ecp-maven-s3-pv.yaml', 'r') as file:
-        docs = list(yaml.safe_load_all(file))
+    # Read bucket name from Helm values.yaml
+    values_path = Path(__file__).parent / 'helm-chart' / 'values.yaml'
     
-    # Find bucket name from PersistentVolume
-    bucket_name = None
-    for doc in docs:
-        if doc.get('kind') == 'PersistentVolume':
-            bucket_name = doc['spec']['csi']['volumeAttributes']['bucketName']
-            break
+    with open(values_path, 'r') as file:
+        values = yaml.safe_load(file)
+    
+    bucket_name = values.get('s3', {}).get('bucketName')
     
     if not bucket_name:
-        print("Error: Could not find bucket name in YAML file")
+        print("Error: Could not find s3.bucketName in values.yaml")
         sys.exit(1)
     
     print(f"Clearing S3 bucket: {bucket_name}")
