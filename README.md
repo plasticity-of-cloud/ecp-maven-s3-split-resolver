@@ -62,7 +62,7 @@ mvn clean install
 Copy the built JAR into Maven's extension directory:
 
 ```bash
-cp target/maven-s3-split-resolver-1.0.0.jar $MAVEN_HOME/lib/ext/
+cp target/maven-s3-split-resolver*.jar $MAVEN_HOME/lib/ext/
 ```
 
 Alternatively, reference it via `.mvn/extensions.xml` in your project:
