@@ -6,7 +6,9 @@ Cost analysis for storing 50GB of Maven artifacts across AWS storage solutions f
 
 **Winner: S3 + Mountpoint with caching** - Most cost-effective at **$1.25-1.50/month** with excellent performance for read-heavy Maven workloads.
 
-**Key Insight**: EFS per-operation costs ($0.03/GB read, $0.07/GB write) make it 21-31x more expensive than S3 for high-I/O Maven builds. FSx Lustre is single-AZ only with 1.2TB minimum provisioning.
+**Key Insights**: 
+- EFS per-operation costs ($0.03/GB read, $0.07/GB write) make it 21-31x more expensive than S3 for high-I/O Maven builds
+- FSx OpenZFS minimum throughput provisioning (80 MBps) drives costs to $78.60+/month, making it 52-63x more expensive than S3
 
 ## Storage Options Compared
 
@@ -43,23 +45,23 @@ Cost analysis for storing 50GB of Maven artifacts across AWS storage solutions f
 - Per-operation costs add up quickly with high I/O workloads
 - Maven builds generate many small read/write operations
 
-### 3. Amazon FSx for Lustre (SSD, Single-AZ only)
-- **Storage Cost**: $174/month (1.2TB minimum × $0.145/GB-month)
-- **Throughput Cost**: Variable based on provisioned MBps ($0.52/MBps-month)
-- **Metadata IOPS**: $0.055/IOPS-month (above included baseline)
-- **Minimum Provisioning**: 1.2TB (cannot provision less)
-- **Total Monthly Cost**: **$174+** (minimum, before throughput costs)
+### 3. Amazon FSx for OpenZFS (Multi-AZ, SSD)
+- **Storage Cost**: $9.00/month (50GB × $0.18/GB-month for Multi-AZ SSD)
+- **Throughput Cost**: $69.60/month (80 MBps × $0.87/MBps-month minimum)
+- **Minimum Throughput**: 80 MBps (cannot provision less for Multi-AZ)
+- **Data Transfer**: Included in throughput price (cross-AZ replication included)
+- **Total Monthly Cost**: **$78.60+**
 
 **Advantages:**
-- High-performance parallel filesystem
-- Excellent for HPC workloads
-- Can integrate with S3 as data repository
+- True POSIX filesystem with ZFS features
+- Multi-AZ high availability with automatic failover
+- High performance (sub-millisecond latency)
+- Snapshots and cloning capabilities
 
 **Disadvantages:**
-- **Single-AZ only** - no multi-AZ option available
-- Massive over-provisioning for 50GB use case (forced to pay for 1.2TB)
-- Additional throughput costs scale quickly
-- Not cost-effective for Maven artifact caching
+- Minimum throughput provisioning drives cost
+- Significantly more expensive than S3 for artifact caching
+- Over-provisioned for Maven workload needs
 
 ## Workload Analysis: 1000 Jobs/Day with Bin Packing
 
@@ -84,9 +86,9 @@ Cost analysis for storing 50GB of Maven artifacts across AWS storage solutions f
 ## Cost Breakdown (Monthly)
 
 ```
-S3 + Mountpoint:  $1.25-1.50   (21-31x cheaper than EFS, multi-AZ durable)
+S3 + Mountpoint:  $1.25-1.50   (52-63x cheaper than FSx OpenZFS, multi-AZ durable)
 EFS:             $31.50-46.50  (baseline with operation costs, multi-AZ)
-FSx Lustre:         $174.00+   (minimum provisioning, single-AZ only)
+FSx OpenZFS:        $78.60+    (minimum with throughput, multi-AZ HA)
 ```
 
 **Note:** EFS costs vary significantly based on I/O patterns. Maven builds with many small operations can push costs higher.
@@ -115,11 +117,11 @@ cacheEmptyDirSizeLimit: 8Gi
 
 **Warning**: Per-operation costs can be significant for Maven builds. Monitor actual I/O patterns before committing.
 
-### Avoid: FSx Lustre for Maven Artifacts
+### Avoid: FSx OpenZFS for Maven Artifacts
 **Reasons**: 
-- Single-AZ only (no multi-AZ option)
-- Massive over-provisioning cost (1.2TB minimum for 50GB need)
-- Throughput costs add up quickly
+- Minimum throughput provisioning (80 MBps) drives cost to $78.60+/month
+- Over-provisioned for Maven artifact caching workload
+- 52-63x more expensive than S3 solution
 
 ## Implementation Notes
 
@@ -134,15 +136,15 @@ cacheEmptyDirSizeLimit: 8Gi
 
 ## Cost Projections
 
-| Scale | S3 + Mountpoint | EFS (Multi-AZ) | FSx Lustre (Single-AZ) |
+| Scale | S3 + Mountpoint | EFS (Multi-AZ) | FSx OpenZFS (Multi-AZ) |
 |-------|-----------------|----------------|------------------------|
-| 50GB | $1.25-1.50 | $31.50-46.50 | $174+ |
-| 100GB | $2.50-3.00 | $63.00-93.00 | $174+ |
-| 500GB | $12.50-15.00 | $315-465 | $174+ |
+| 50GB | $1.25-1.50 | $31.50-46.50 | $78.60+ |
+| 100GB | $2.50-3.00 | $63.00-93.00 | $87.60+ |
+| 500GB | $12.50-15.00 | $315-465 | $159.60+ |
 
-*Note: FSx costs remain flat due to minimum 1.2TB provisioning (single-AZ only)*
 *S3 range accounts for cross-AZ data transfer on cache misses*
 *EFS costs include storage + estimated operation costs (reads: $0.03/GB, writes: $0.07/GB)*
+*FSx OpenZFS includes minimum 80 MBps throughput ($69.60/month) + storage costs*
 
 ---
 *Analysis based on AWS pricing for Asia Pacific (Mumbai) region as of March 2026*
