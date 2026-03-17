@@ -85,11 +85,21 @@ Cost analysis for storing 50GB of Maven artifacts across AWS storage solutions f
 
 ## Cost Breakdown (Monthly)
 
+### Low Throughput (Baseline)
 ```
 S3 + Mountpoint:  $1.25-1.50   (52-63x cheaper than FSx OpenZFS, multi-AZ durable)
 EFS:             $31.50-46.50  (baseline with operation costs, multi-AZ)
-FSx OpenZFS:        $78.60+    (minimum with throughput, multi-AZ HA)
+FSx OpenZFS:        $78.60+    (minimum with 80 MBps throughput, multi-AZ HA)
 ```
+
+### High Throughput (500 MB/s sustained, 8 hours/day)
+```
+S3 + Mountpoint:     $1.25-1.50   (scales automatically, no throughput charges)
+FSx OpenZFS:           $444.00    (500 MBps × $0.87/MBps + storage, multi-AZ)
+EFS:                $16,384.50    (432,000 GB transferred × $0.03-0.07/GB, multi-AZ)
+```
+
+**Key Insight:** At high throughput, S3 is **296x cheaper than FSx OpenZFS** and **10,923x cheaper than EFS**. EFS per-GB transfer pricing becomes prohibitively expensive for high-throughput workloads.
 
 **Note:** EFS costs vary significantly based on I/O patterns. Maven builds with many small operations can push costs higher.
 
@@ -97,6 +107,13 @@ FSx OpenZFS:        $78.60+    (minimum with throughput, multi-AZ HA)
 
 ### Primary Choice: S3 + Mountpoint for S3
 **Best for**: Maven artifact storage with 1000+ jobs/day
+
+**Why it wins:**
+- Lowest cost at any scale ($1.25-1.50/month for 50GB)
+- Throughput scales automatically without additional charges
+- At high throughput (500 MB/s), 296x cheaper than FSx OpenZFS, 10,923x cheaper than EFS
+- Multi-AZ durable by default (11 9's)
+- Node-local caching provides excellent performance
 
 **Configuration:**
 ```yaml
