@@ -28,36 +28,39 @@ Licensee shall **NOT**:
 
 | Tier | Regular Price | Early Adopter Price | Lock Period |
 |------|--------------|---------------------|-------------|
-| Startup/SMB (< 50 employees) | €500/year | **€100/year** | 3 years |
-| Medium (50-500 employees) | €2,500/year | **€500/year** | 3 years |
-| Enterprise (500+ employees) | €10,000/year | **€2,000/year** | 3 years |
-| SaaS / Commercial Use | Custom (€25,000+ base) | Contact us | Custom |
+| Startup/SMB (< 50 employees) | €2,500/year | **€500/year** | 1 year |
+| Medium (50-500 employees) | €10,000/year | **€2,500/year** | 1 year |
+| Enterprise (500+ employees) | €100,000/year | **€25,000/year** | 1 year |
+| SaaS / Commercial Use | Custom (€150,000+ base) | Contact us | Custom |
 
 **Early Adopter Benefits:**
-- **50-80% discount** on regular pricing
-- **Price locked for 3 years** — guaranteed no price increases
+- **75% discount** on regular pricing
+- **Price locked for 1 year** — guaranteed no price increases during first year
 - **Listed as founding customer** (with your permission)
 - **Priority support channel** — faster response times
 - **Influence product roadmap** — your feedback shapes future development
+- **Enterprise tier includes Professional Support** (€5,000 value)
 
-After the Early Adopter Program ends, standard pricing applies to all new customers. Existing Early Adopter customers retain their discounted pricing for the full 3-year lock period.
+After the Early Adopter Program ends, standard pricing applies to all new customers. Existing Early Adopter customers may renew at a discounted rate (negotiable based on usage and feedback).
 
 ### Support Packages (Optional Add-ons)
 
 | Package | Price | Benefits |
 |---------|-------|----------|
 | Community | Free | GitHub issues, best-effort support |
-| Professional | +€1,000/year | 48-hour response time, email support |
-| Enterprise | +€5,000/year | 4-hour response time, dedicated Slack channel, quarterly architecture reviews |
+| Professional | +€5,000/year | 48-hour response time, email support, quarterly check-ins |
+| Enterprise Support | +€25,000/year | 4-hour response time, dedicated Slack channel, monthly architecture reviews, on-call support |
+
+**Note:** Enterprise tier license includes Professional Support at no additional cost.
 
 ### Consulting Services
 
 | Service | Price | Description |
 |---------|-------|-------------|
-| Implementation | €2,500 | 1-day setup, optimization, and best practices |
-| Architecture Review | €5,000 | 2-day EKS + S3 architecture design and optimization |
-| Custom Development | €150/hour | Feature development, custom integrations |
-| Team Training | €1,500/day | On-site or remote training on S3 optimization strategies |
+| Implementation | €5,000 | 2-day setup, optimization, and best practices |
+| Architecture Review | €10,000 | 3-day EKS + S3 architecture design and optimization |
+| Custom Development | €200/hour | Feature development, custom integrations |
+| Team Training | €3,000/day | On-site or remote training on S3 optimization strategies |
 
 ## 4. SaaS and Commercial Use
 
