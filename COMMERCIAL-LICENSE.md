@@ -28,9 +28,9 @@ Licensee shall **NOT**:
 
 | Tier | Regular Price | Early Adopter Price | Savings |
 |------|--------------|---------------------|---------|
-| Startup/SMB (< 50 employees) | €700/year | **€500/year** | €200 |
-| Medium (50-500 employees) | €2,000/year | **€1,500/year** | €500 |
-| Enterprise (500+ employees) | €10,000/year | **€7,000/year** | €3,000 |
+| SMB (up to 300 early adopters) | €500/year | **€300/year** | €200 |
+| Medium (up to 700 early adopters) | €1,000/year | **€700/year** | €300 |
+| Enterprise (up to 2,000 early adopters) | €2,500/year | **€2,000/year** | €500 |
 | SaaS / Commercial Use | **Private offer** | **Private offer** | Custom |
 
 **Early Adopter Benefits:**
