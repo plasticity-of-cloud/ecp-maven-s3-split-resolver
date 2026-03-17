@@ -2,6 +2,13 @@
 
 **Target Repository:** https://github.com/awslabs/mountpoint-s3
 
+---
+
+**Copyright © 2026 Plasticity.Cloud**  
+This document may be freely shared and referenced with attribution.
+
+---
+
 ## Summary
 
 Add support for S3 conditional writes (`If-None-Match`, `If-Match`) through the Mountpoint filesystem interface to prevent redundant uploads in concurrent write scenarios.
