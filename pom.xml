@@ -54,31 +54,6 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.13.0</version>
             </plugin>
-            <plugin>
-                <groupId>com.google.cloud.tools</groupId>
-                <artifactId>jib-maven-plugin</artifactId>
-                <version>3.5.1</version>
-                <configuration>
-                    <from>
-                        <image>public.ecr.aws/docker/library/maven:3.9-amazoncorretto-21-al2023</image>
-                    </from>
-                    <to>
-                        <image>maven-s3-split-resolver</image>
-                    </to>
-                    <container>
-                        <entrypoint>INHERIT</entrypoint>
-                    </container>
-                    <extraDirectories>
-                        <paths>
-                            <path>
-                                <from>target</from>
-                                <into>/usr/share/maven/lib/ext</into>
-                                <includes>maven-s3-split-resolver-*.jar</includes>
-                            </path>
-                        </paths>
-                    </extraDirectories>
-                </configuration>
-            </plugin>
         </plugins>
     </build>
 </project>
