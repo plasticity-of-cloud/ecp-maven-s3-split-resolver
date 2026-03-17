@@ -8,29 +8,32 @@ Cost analysis for storing 50GB of Maven artifacts across AWS storage solutions f
 
 ## Storage Options Compared
 
-### 1. S3 Standard + Mountpoint for S3 (with caching)
+### 1. S3 Standard + Mountpoint for S3 (with caching, Multi-AZ)
 - **Storage Cost**: $1.25/month (50GB × $0.025/GB-month)
-- **Data Transfer**: ~$0 (within same AZ with caching)
+- **Data Transfer**: ~$0 (within same AZ with caching; cross-AZ: $0.01/GB)
 - **Cache Storage**: 8GB EBS (emptyDir) - included in node costs
-- **Total Monthly Cost**: **$1.25**
+- **Cross-AZ Access**: Minimal cost due to high cache hit ratio (80-90%)
+- **Total Monthly Cost**: **$1.25-1.50** (depending on cross-AZ cache misses)
 
 **Advantages:**
 - Lowest cost for storage
 - Excellent for read-heavy Maven workloads
-- Automatic caching reduces repeated downloads
+- Automatic caching reduces repeated downloads and cross-AZ traffic
 - Scales to zero when not in use
 - No minimum provisioning requirements
+- S3 provides 11 9's durability across multiple AZs automatically
 
-### 2. Amazon EFS (General Purpose)
+### 2. Amazon EFS (General Purpose, Multi-AZ)
 - **Storage Cost**: $16.50/month (50GB × $0.33/GB-month)
-- **Data Transfer**: Included within VPC
+- **Data Transfer**: Included within VPC (cross-AZ access included)
 - **Total Monthly Cost**: **$16.50**
 
 **Advantages:**
 - True POSIX filesystem
-- Concurrent access from multiple pods
+- Concurrent access from multiple pods across AZs
 - No caching configuration needed
 - Automatic scaling
+- Built-in multi-AZ replication and durability
 
 ### 3. Amazon FSx for Lustre (SSD, 50 MB/s per TB)
 - **Storage Cost**: $7.00/month (50GB × $0.14/GB-month)
@@ -65,9 +68,9 @@ Cost analysis for storing 50GB of Maven artifacts across AWS storage solutions f
 ## Cost Breakdown (Monthly)
 
 ```
-S3 + Mountpoint:     $1.25   (13x cheaper than EFS)
-EFS:                $16.50   (baseline)
-FSx Lustre:        $168.00   (134x more expensive)
+S3 + Mountpoint:  $1.25-1.50  (11-13x cheaper than EFS, multi-AZ durable)
+EFS:                 $16.50   (baseline, multi-AZ)
+FSx Lustre:         $168.00   (134x more expensive)
 ```
 
 ## Recommendations
@@ -81,7 +84,7 @@ mountOptions:
   - allow-delete
   - allow-overwrite
   - "metadata-ttl 300"
-  - "read-part-size 1048576"
+  - "read-part-size 5242880"  # 5MB minimum required by Mountpoint
   - "max-threads 16"
   - uid=1000
   - gid=1000
@@ -100,17 +103,22 @@ cacheEmptyDirSizeLimit: 8Gi
 1. **S3 Lifecycle**: Configure lifecycle policies for old artifact versions
 2. **Cache Tuning**: Monitor cache hit rates and adjust size if needed
 3. **Regional Placement**: Ensure S3 bucket in same region as EKS cluster
-4. **Monitoring**: Track storage costs and access patterns
+4. **Multi-AZ Considerations**: 
+   - S3 is inherently multi-AZ durable (11 9's)
+   - EFS provides multi-AZ access with no additional cost
+   - Node-local caching minimizes cross-AZ data transfer costs
+5. **Monitoring**: Track storage costs, access patterns, and cross-AZ traffic
 
 ## Cost Projections
 
-| Scale | S3 + Mountpoint | EFS | FSx Lustre |
-|-------|-----------------|-----|------------|
-| 50GB | $1.25 | $16.50 | $168 |
-| 100GB | $2.50 | $33.00 | $168 |
-| 500GB | $12.50 | $165.00 | $168 |
+| Scale | S3 + Mountpoint | EFS (Multi-AZ) | FSx Lustre |
+|-------|-----------------|----------------|------------|
+| 50GB | $1.25-1.50 | $16.50 | $168 |
+| 100GB | $2.50-3.00 | $33.00 | $168 |
+| 500GB | $12.50-15.00 | $165.00 | $168 |
 
 *Note: FSx costs remain flat due to minimum 1.2TB provisioning*
+*S3 range accounts for cross-AZ data transfer on cache misses*
 
 ---
 *Analysis based on AWS pricing for Asia Pacific (Mumbai) region as of March 2026*
