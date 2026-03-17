@@ -14,6 +14,24 @@ This extension splits the local repository into two locations:
 
 ## Usage
 
+### Building the Docker Image
+
+Build the Maven image with the S3 split resolver extension:
+
+```bash
+# Build and push to ECR (uses default region from AWS config)
+./build-image.sh
+
+# Or specify region explicitly
+./build-image.sh --region ap-south-1
+```
+
+The script will:
+- Build the extension JAR
+- Authenticate to public ECR (for base image) and private ECR
+- Build Docker image with git installed
+- Push to your ECR: `{account-id}.dkr.ecr.{region}.amazonaws.com/docker/library/maven:3.9-amazoncorretto-21-al2023-s3`
+
 ### Kubernetes Deployment (Recommended)
 
 Deploy using Helm chart with S3-backed artifact caching:
