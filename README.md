@@ -12,6 +12,14 @@ This extension splits the local repository into two locations:
 - **Artifacts** (JARs, POMs, checksums) → S3 mount (immutable, sequential writes)
 - **Metadata** (tracking files) → EmptyDir (mutable, random I/O)
 
+## Requirements
+
+**Open Source Version:**
+- Java 11 or higher
+- Maven 3.9.x
+
+**Commercial License:** Other Maven versions and Java compatibility can be supported. Contact **ecosystem@plasticity.cloud** for custom requirements.
+
 ## Usage
 
 ### Building the Docker Image
@@ -62,7 +70,7 @@ mvn clean install
 Copy the built JAR into Maven's extension directory:
 
 ```bash
-cp target/maven-s3-split-resolver*.jar $MAVEN_HOME/lib/ext/
+cp target/maven-s3-split-resolver-*.jar $MAVEN_HOME/lib/ext/
 ```
 
 Alternatively, reference it via `.mvn/extensions.xml` in your project:
