@@ -22,12 +22,24 @@ Licensee shall **NOT**:
 
 ## 3. Pricing
 
-| Tier | Annual License | Description |
-|------|---------------|-------------|
-| Startup/SMB (< 50 employees) | **€500/year** | Perfect for small teams and growing companies |
-| Medium (50-500 employees) | **€2,000/year** | Scales with your organization |
-| Enterprise (500+ employees) | **€10,000/year** | Includes priority support |
-| SaaS / Commercial Use | **Private offer** | Custom pricing for service providers |
+### Early Adopter Program (Limited Time)
+
+**Available for first 10 customers only**
+
+| Tier | Regular Price | Early Adopter Price | Savings |
+|------|--------------|---------------------|---------|
+| Startup/SMB (< 50 employees) | €700/year | **€500/year** | €200 |
+| Medium (50-500 employees) | €2,000/year | **€1,500/year** | €500 |
+| Enterprise (500+ employees) | €10,000/year | **€7,000/year** | €3,000 |
+| SaaS / Commercial Use | **Private offer** | **Private offer** | Custom |
+
+**Early Adopter Benefits:**
+- **Significant savings** on regular pricing
+- **Listed as founding customer** (with your permission)
+- **Priority support** via ecosystem@plasticity.cloud
+- **Influence product roadmap** — your feedback shapes future development
+
+After the first 10 customers, standard pricing applies to all new customers.
 
 **All tiers include:**
 - Full source code access and modification rights
