@@ -92,14 +92,22 @@ EFS:             $31.50-46.50  (baseline with operation costs, multi-AZ)
 FSx OpenZFS:        $78.60+    (minimum with 80 MBps throughput, multi-AZ HA)
 ```
 
-### High Throughput (500 MB/s sustained, 8 hours/day)
-```
-S3 + Mountpoint:     $1.25-1.50   (scales automatically, no throughput charges)
-FSx OpenZFS:           $444.00    (500 MBps × $0.87/MBps + storage, multi-AZ)
-EFS:                $16,384.50    (432,000 GB transferred × $0.03-0.07/GB, multi-AZ)
-```
+### High Throughput Comparison
+**S3 Throughput Model:**
+- **Per-prefix**: 5,500 GET/s + 3,500 PUT/s per prefix
+- **Aggregate**: Multi-GB/s to tens of GB/s across Maven's directory structure (hundreds of prefixes)
+- **Cost**: $1.25-1.50/month (no throughput charges)
 
-**Key Insight:** At high throughput, S3 is **296x cheaper than FSx OpenZFS** and **10,923x cheaper than EFS**. EFS per-GB transfer pricing becomes prohibitively expensive for high-throughput workloads.
+**FSx OpenZFS at 500 MB/s (total file system):**
+- **Total throughput**: 500 MB/s across all clients
+- **Cost**: $444.00/month (500 MBps × $0.87/MBps + storage)
+
+**EFS at 500 MB/s sustained (total file system, 8 hours/day):**
+- **Total throughput**: 500 MB/s across all clients
+- **Data transferred**: 432,000 GB/month (500 MB/s × 8h × 30 days)
+- **Cost**: $16,384.50/month (reads: $10,368 + writes: $6,048 + storage: $16.50)
+
+**Key Insight:** S3 delivers **10-100x higher aggregate throughput** than FSx OpenZFS's 500 MB/s (due to per-prefix parallelism), while costing **296-355x less**. EFS per-GB transfer pricing becomes prohibitively expensive at high throughput.
 
 **Note:** EFS costs vary significantly based on I/O patterns. Maven builds with many small operations can push costs higher.
 
@@ -110,10 +118,15 @@ EFS:                $16,384.50    (432,000 GB transferred × $0.03-0.07/GB, mult
 
 **Why it wins:**
 - Lowest cost at any scale ($1.25-1.50/month for 50GB)
-- Throughput scales automatically without additional charges
-- At high throughput (500 MB/s), 296x cheaper than FSx OpenZFS, 10,923x cheaper than EFS
+- **Throughput scales per-prefix**: 5,500 GET/s + 3,500 PUT/s per prefix
+- **Aggregate throughput**: Multi-GB/s to tens of GB/s across Maven's directory structure
+- No throughput charges regardless of scale
 - Multi-AZ durable by default (11 9's)
 - Node-local caching provides excellent performance
+
+**Throughput advantage:**
+- FSx OpenZFS 500 MB/s costs $444/month (total file system limit)
+- S3 delivers 10-100x higher aggregate throughput at $1.25-1.50/month
 
 **Configuration:**
 ```yaml
