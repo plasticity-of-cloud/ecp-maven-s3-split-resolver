@@ -41,8 +41,7 @@ volumes:
     storageClassName: ebs-sc
     size: 10Gi
   metadataEmptyDir:
-    medium: Memory
-    sizeLimit: 50Mi
+    sizeLimit: 100Mi
   homeEmptyDir: {}
 
 s3:

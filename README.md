@@ -113,14 +113,14 @@ export MAVEN_OPTS="-Dmaven.repo.local=/home/maven/.m2/repository-metadata \
 ├── org/apache/commons/.../*.jar    ← Artifacts here
 └── org/apache/commons/.../*.pom
 
-/home/maven/.m2/repository-metadata (Memory-backed EmptyDir, 50MB)
+/home/maven/.m2/repository-metadata (EmptyDir, 100MB)
 ├── org/apache/commons/.../_remote.repositories  ← Metadata here
 └── org/apache/commons/.../.lastUpdated
 ```
 
 ## Performance Optimizations
 
-- **Memory-backed metadata storage**: Maven metadata files are stored in memory (50MB EmptyDir) for maximum I/O performance
+- **Fast metadata storage**: Maven metadata files are stored in EmptyDir (100MB) for fast I/O performance
 - **S3 artifact caching**: Mountpoint for S3 provides local caching of frequently accessed artifacts
 - **Optimized mount options**: Configured for build workloads with appropriate cache TTL and thread settings
 
