@@ -24,14 +24,14 @@ jobs:
           distribution: 'temurin'
           cache: maven
       
-      - name: Build JAR
-        run: mvn clean package -DskipTests
-      
       - name: Get version from pom.xml
         id: version
         run: |
-          VERSION=$(grep -oP '<version>\K[^<]+' pom.xml)
+          VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
           echo "version=$VERSION" >> $GITHUB_OUTPUT
+      
+      - name: Build JAR
+        run: mvn clean package -DskipTests
       
       - name: Upload JAR artifact
         uses: actions/upload-artifact@v4
