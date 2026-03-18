@@ -1,3 +1,6 @@
+/*
+ * Copyright © 2026 Plasticity.Cloud and CoDriverLabs. All rights reserved.
+ */
 package cloud.plasticity.maven.resolver;
 
 import org.eclipse.aether.RepositorySystemSession;

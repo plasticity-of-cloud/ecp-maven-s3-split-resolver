@@ -1,4 +1,5 @@
 #!/bin/bash
+# Copyright © 2026 Plasticity.Cloud and CoDriverLabs. All rights reserved.
 set -e
 
 # Parse arguments
