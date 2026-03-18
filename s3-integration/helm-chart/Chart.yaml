@@ -1,3 +1,4 @@
+# Copyright © 2026 Plasticity.Cloud and CoDriverLabs. All rights reserved.
 apiVersion: v2
 name: maven-s3-integration
 description: Maven build pod with S3-backed artifact cache
