@@ -1,20 +1,30 @@
 #!/bin/bash
 # Install Maven S3 Split Resolver on EC2 workstation
+# Downloads latest released version from GitHub
 
 set -e
 
-VERSION="${1:-1.0.0}"
-JAR_URL="${2:-https://github.com/plasticity-of-cloud/ecp-maven-s3-split-resolver/releases/download/v${VERSION}/maven-s3-split-resolver.jar}"
+REPO="${1:-plasticity-of-cloud/ecp-maven-s3-split-resolver}"
+EXTENSIONS_DIR="/usr/share/maven/lib/ext"
 
-echo "Installing Maven S3 Split Resolver v${VERSION}..."
+echo "Installing Maven S3 Split Resolver from GitHub..."
+
+# Get latest release version from GitHub API
+LATEST_TAG=$(curl -s "https://api.github.com/repos/${REPO}/releases/latest" | grep '"tag_name"' | cut -d'"' -f4)
+
+if [ -z "$LATEST_TAG" ]; then
+    echo "Error: Could not fetch latest release version"
+    exit 1
+fi
+
+echo "Latest version: $LATEST_TAG"
 
 # Download JAR
+JAR_URL="https://github.com/${REPO}/releases/download/${LATEST_TAG}/maven-s3-split-resolver.jar"
+echo "Downloading from: $JAR_URL"
 curl -L "$JAR_URL" -o /tmp/maven-s3-split-resolver.jar
 
 # Create Maven extensions directory if it doesn't exist
-MAVEN_HOME="${MAVEN_HOME:-/usr/share/maven}"
-EXTENSIONS_DIR="${MAVEN_HOME}/lib/ext"
-
 if [ ! -d "$EXTENSIONS_DIR" ]; then
     echo "Creating extensions directory: $EXTENSIONS_DIR"
     sudo mkdir -p "$EXTENSIONS_DIR"
@@ -43,4 +53,4 @@ else
     echo "MAVEN_OPTS already configured in /home/ec2-user/.bashrc"
 fi
 
-echo "Installation complete!"
+echo "Installation complete! Version: $LATEST_TAG"

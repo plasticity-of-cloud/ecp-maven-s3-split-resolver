@@ -10,7 +10,7 @@
 ### Quick Install (All-in-One)
 
 ```bash
-# Install Mountpoint, Corretto (default: 21), and Maven
+# Install Mountpoint, Corretto (default: 21), Maven, and S3 Split Resolver
 ./install-all.sh
 
 # Or specify Corretto version
@@ -28,6 +28,9 @@ sudo dnf install -y java-21-amazon-corretto
 
 # Install Maven
 sudo dnf install -y maven
+
+# Install Maven S3 Split Resolver (downloads latest release)
+./maven-s3-split-resolver.sh
 ```
 
 ## Usage
