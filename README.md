@@ -12,6 +12,14 @@ This extension splits the local repository into two locations:
 - **Artifacts** (JARs, POMs, checksums) → S3 mount (immutable, sequential writes)
 - **Metadata** (tracking files) → EmptyDir (mutable, random I/O)
 
+## Requirements
+
+**Open Source Version:**
+- Java 11 or higher
+- Maven 3.9.x
+
+**Commercial License:** Other Maven versions and Java compatibility can be supported. Contact **ecosystem@plasticity.cloud** for custom requirements.
+
 ## Usage
 
 ### Building the Docker Image
@@ -62,7 +70,7 @@ mvn clean install
 Copy the built JAR into Maven's extension directory:
 
 ```bash
-cp target/maven-s3-split-resolver-1.0.0-SNAPSHOT.jar $MAVEN_HOME/lib/ext/
+cp target/maven-s3-split-resolver-*.jar $MAVEN_HOME/lib/ext/
 ```
 
 Alternatively, reference it via `.mvn/extensions.xml` in your project:
@@ -72,7 +80,7 @@ Alternatively, reference it via `.mvn/extensions.xml` in your project:
   <extension>
     <groupId>cloud.plasticity</groupId>
     <artifactId>maven-s3-split-resolver</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.0</version>
   </extension>
 </extensions>
 ```
@@ -100,10 +108,21 @@ export MAVEN_OPTS="-Dmaven.repo.local=/home/maven/.m2/repository-metadata \
 ├── org/apache/commons/.../*.jar    ← Artifacts here
 └── org/apache/commons/.../*.pom
 
-/home/maven/.m2/repository-metadata (EmptyDir)
+```
+/home/maven/.m2/repository          (S3 mount)
+├── org/apache/commons/.../*.jar    ← Artifacts here
+└── org/apache/commons/.../*.pom
+
+/home/maven/.m2/repository-metadata (EmptyDir, 100MB)
 ├── org/apache/commons/.../_remote.repositories  ← Metadata here
 └── org/apache/commons/.../.lastUpdated
 ```
+
+## Performance Optimizations
+
+- **Fast metadata storage**: Maven metadata files are stored in EmptyDir (100MB) for fast I/O performance
+- **S3 artifact caching**: Mountpoint for S3 provides local caching of frequently accessed artifacts
+- **Optimized mount options**: Configured for build workloads with appropriate cache TTL and thread settings
 
 ## License
 
