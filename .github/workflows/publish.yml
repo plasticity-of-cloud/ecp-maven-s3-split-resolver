@@ -34,7 +34,7 @@ jobs:
         run: mvn clean package -DskipTests
       
       - name: Upload JAR artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: maven-s3-split-resolver
           path: target/maven-s3-split-resolver-${{ steps.version.outputs.version }}.jar
